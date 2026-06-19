@@ -39,14 +39,14 @@ kg  - multiply rest numbers in sku by 3
 jay  - multiply rest numbers in sku by 1.65
 crassula  - multiply rest numbers in sku by 5
 kk  - multiply rest numbers in sku by 4
+pc - if rest numbers are <= 9999 then multiply by 2
 ]
 
 Also put a product type taken from below list according to jwellery shown in image. Use Others if there is no matching product type. A product can have only 1 Product Type
 Product Types are [Anklets, Bajuband, Bangles, Bracelets, Earrings, Jewelry Sets, Jhoomar, Kamarband, Kumkum Box, Maang Tikka, Necklaces, Rings, Others] 
 Also add product tags chosen from below list. A product can have multiple tags
 [bridal, wedding, reception, sangeet-haldi, festive, office-time, daily-wear, party, gifting, 
-office-daily (if both office-time and daily-wear tags are present add this tag also), 
-under-999 (if product cost is <= 999 add this tag)]
+office-daily (if office-time or daily-wear tags are present add this tag also)]
 check image and add set_includes which tells what jwelleries are in image
 
 

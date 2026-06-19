@@ -48,12 +48,16 @@ class ShopifyUploader:
         except:
             print("Error constructing description HTML, falling back to plain text")
             return
-
-        collection_id = None
+        product_data["product_tags"].append("new-arrivals")
+        if product_data["price"] <= 999:
+            product_data["product_tags"].append("under-999")
+        collection_ids = []
         for edge in self.collections_data['data']['collections']['edges']:
             if edge['node']['title'] == product_data["product_type"]:
-                collection_id = edge['node']['id']
-        if not collection_id:
+                collection_ids.append(edge['node']['id'])
+            if edge['node']['title'] in product_data["product_tags"]:
+                collection_ids.append(edge['node']['id'])
+        if not collection_ids:
             print(f"Collection '{product_data['product_type']}' not found for product '{product_data['title']}'")
             return
         
@@ -86,7 +90,7 @@ class ShopifyUploader:
                 description=required_des,
                 image_path=product_data["generated_image_path"],
                 variants=required_variants,
-                collection_id=collection_id,
+                collection_ids=collection_ids,
                 publication_ids=self.publication_ids,
         )
 
@@ -155,7 +159,7 @@ class ShopifyUploader:
         description: str,
         image_path: str,
         variants: Optional[list[dict]] = None,
-        collection_id: Optional[str] = None,
+        collection_ids: Optional[list[str]] = None,
         location_id: Optional[str] = "gid://shopify/Location/81822777483",
         category_id: Optional[str] = "gid://shopify/TaxonomyCategory/aa-6",
         publication_ids: Optional[list[str]] = None,
@@ -186,7 +190,7 @@ class ShopifyUploader:
             ]
 
         # 3. Execute productCreate
-        product_tags = product_tags + ["new-arrivals"]
+        
         product_response = self.shopify_graphql(
             """
             mutation productCreate($product: ProductCreateInput!, $media: [CreateMediaInput!]) {
@@ -239,7 +243,7 @@ class ShopifyUploader:
                     ],
                     **({"category": category_id} if category_id else {}),
                     **({"productOptions": product_options} if variants else {}),
-                    **({"collectionsToJoin": [collection_id]} if collection_id else {}),
+                    **({"collectionsToJoin": collection_ids} if collection_ids else {}),
                 },
                 "media": [{"originalSource": shopify_image_url, "mediaContentType": "IMAGE", "alt": title}],
             },

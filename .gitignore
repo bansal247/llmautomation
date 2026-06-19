@@ -17,3 +17,5 @@ session.session-journal
 *.bmp
 *.mp4
 downloaded.json
+config.bat
+node_modules
